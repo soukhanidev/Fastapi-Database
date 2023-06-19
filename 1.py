@@ -2,31 +2,31 @@ from fastapi import FastAPI, HTTPException
 import mysql.connector
 from pydantic import BaseModel
 from customer import customer
-
+from factor import factor
 
 app=FastAPI()
 
-db_config = {
-    'user': 'root',
-    'password': 'bs5295025s',
-    'host': 'localhost',
-    'database': 'resturan'
-}
 @app.get('/customer/{customer_id}')
 def get_customer(customer_id:int):
     try:
-        mydb=mysql.connector.connect(**db_config)
+        mydb=mysql.connector.connect(host='localhost',
+                             database='resturan',
+                             user='root',
+                             password='Bs5295025s'
+
+)
         cursor=mydb.cursor()
         result=cursor.callproc('select_customer',[customer_id])
         mydb.commit()
 
         for result in cursor.stored_results():
             detail=result.fetchall()
-        for det in detail:
-            return(det)
-
-
-        print("Finding Successfully")
+            if len(detail) > 0:
+                 for det in detail:
+                      return(det)
+            else:
+                 raise HTTPException(status_code=404,detail="customer not found!!!")
+        
     except mysql.connector.Error as error:
         print("Failed to get record from MySQL table: {}".format(error))
 
@@ -39,7 +39,12 @@ def get_customer(customer_id:int):
 @app.post('/create_customer')
 def get_customer(customer:customer):
     try:
-        mydb=mysql.connector.connect(**db_config)
+        mydb=mysql.connector.connect(host='localhost',
+                             database='resturan',
+                             user='root',
+                             password='Bs5295025s'
+
+)
         customer0=[customer.id,customer.name,customer.number,customer.address]
         cursor=mydb.cursor()
         result=cursor.callproc(procname='insert_customer',args=customer0)
@@ -63,7 +68,12 @@ def get_customer(customer:customer):
 @app.delete('/customer/{customer_id}')
 def delete_customer(customer_id:int):
     try:
-        mydb=mysql.connector.connect(**db_config)
+        mydb=mysql.connector.connect(host='localhost',
+                             database='resturan',
+                             user='root',
+                             password='Bs5295025s'
+
+)
         cursor=mydb.cursor()
         result=cursor.callproc('delete_customer',[customer_id])
         mydb.commit()
@@ -86,7 +96,12 @@ def delete_customer(customer_id:int):
 @app.post('/customer/update_customer')
 def update_customer(customer:customer):
     try:
-        mydb=mysql.connector.connect(**db_config)
+        mydb=mysql.connector.connect(host='localhost',
+                             database='resturan',
+                             user='root',
+                             password='Bs5295025s'
+
+)
         customer0=[customer.id,customer.name,customer.number,customer.address]
         cursor=mydb.cursor()
         result=cursor.callproc(procname='update_customer',args=customer0)
@@ -106,4 +121,3 @@ def update_customer(customer:customer):
                     cursor.close()
                     mydb.close()
                     print("MySQL connection is closed") 
-
