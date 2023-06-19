@@ -1,0 +1,24 @@
+        try:
+            connection = mysql.connector.connect(host='localhost',
+                                                database='gomrok',
+                                                user='root',
+                                                password='Bs5295025s')
+            
+            # pid=int(input("Enter ProductID for change : "))
+            # pyear=int(input("Enter New Year Of product : "))
+            # insertion=[pid,pyear]
+            cursor = connection.cursor()
+            cursor.callproc('update_product', [20,2020])
+            connection.commit()
+            # print results
+            print("Change Successfully ")
+            for result in cursor.stored_results():
+                print(result.fetchall())
+
+        except mysql.connector.Error as error:
+            print("Failed to execute stored procedure: {}".format(error))
+        finally:
+            if (connection.is_connected()):
+                cursor.close()
+                connection.close()
+                print("MySQL connection is closed")
