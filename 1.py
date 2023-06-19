@@ -6,15 +6,16 @@ from customer import customer
 
 app=FastAPI()
 
+db_config = {
+    'user': 'root',
+    'password': 'bs5295025s',
+    'host': 'localhost',
+    'database': 'resturan'
+}
 @app.get('/customer/{customer_id}')
 def get_customer(customer_id:int):
     try:
-        mydb=mysql.connector.connect(host='localhost',
-                             database='resturan',
-                             user='root',
-                             password='Bs5295025s'
-
-)
+        mydb=mysql.connector.connect(**db_config)
         cursor=mydb.cursor()
         result=cursor.callproc('select_customer',[customer_id])
         mydb.commit()
@@ -38,12 +39,7 @@ def get_customer(customer_id:int):
 @app.post('/create_customer')
 def get_customer(customer:customer):
     try:
-        mydb=mysql.connector.connect(host='localhost',
-                             database='resturan',
-                             user='root',
-                             password='Bs5295025s'
-
-)
+        mydb=mysql.connector.connect(**db_config)
         customer0=[customer.id,customer.name,customer.number,customer.address]
         cursor=mydb.cursor()
         result=cursor.callproc(procname='insert_customer',args=customer0)
@@ -67,12 +63,7 @@ def get_customer(customer:customer):
 @app.delete('/customer/{customer_id}')
 def delete_customer(customer_id:int):
     try:
-        mydb=mysql.connector.connect(host='localhost',
-                             database='resturan',
-                             user='root',
-                             password='Bs5295025s'
-
-)
+        mydb=mysql.connector.connect(**db_config)
         cursor=mydb.cursor()
         result=cursor.callproc('delete_customer',[customer_id])
         mydb.commit()
@@ -95,12 +86,7 @@ def delete_customer(customer_id:int):
 @app.post('/customer/update_customer')
 def update_customer(customer:customer):
     try:
-        mydb=mysql.connector.connect(host='localhost',
-                             database='resturan',
-                             user='root',
-                             password='Bs5295025s'
-
-)
+        mydb=mysql.connector.connect(**db_config)
         customer0=[customer.id,customer.name,customer.number,customer.address]
         cursor=mydb.cursor()
         result=cursor.callproc(procname='update_customer',args=customer0)
